@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Despertador com Som</title>
+  <style>
+    /* Estilos CSS aqui (mesmo código do exemplo anterior) */
+  </style>
+</head>
+<body>
+  <h1>Despertador com Som</h1>
+
+  <div class="despertador-container">
+    <label for="hora">Hora:</label>
+    <input type="number" id="hora" min="0" max="23">
+
+    <label for="minutos">Minutos:</label>
+    <input type="number" id="minutos" min="0" max="59">
+
+    <button id="definirDespertador">Definir Despertador</button>
+
+    <div id="contador"></div>
+
+    <audio id="alarme" src="gemido-whatsapp.mp3" loop></audio>
+  </div>
+
+  <script>
+    //comentário de uma linha
+    /**
+     *comentário de varias linhas
+     *
+     * 
+     */ 
+   // Define um evento de clique para o elemento com o ID "definirDespertador"
+// Quando o botão for clicado, a função anônima será executada.
+document.getElementById("definirDespertador").addEventListener("click", function() {
+  // Obtém o valor do elemento de entrada com o ID "hora" e converte para um número inteiro.
+  const horas = parseInt(document.getElementById("hora").value);
+  // Obtém o valor do elemento de entrada com o ID "minutos" e converte para um número inteiro.
+  const minutos = parseInt(document.getElementById("minutos").value);
+
+     // Verifica se as entradas de horas e minutos não são números (NaN)
+// ou se estão fora dos limites válidos para horas (0-23) e minutos (0-59).
+if (isNaN(horas) || isNaN(minutos) || horas < 0 || horas > 23 || minutos < 0 || minutos > 59) {
+  // Se qualquer uma das condições acima for verdadeira, exibe um alerta informando
+  // que horas e minutos inseridos não são válidos e interrompe a execução.
+  alert("Por favor, insira uma hora e minutos válidos.");
+  return;
+}
+// Chama a função 'despertador' passando os valores das variáveis 'horas' e 'minutos' como argumentos.
+      despertador(horas, minutos);
+    });
+
+    function despertador(horas, minutos) {
+      // Cria um novo objeto Date representando o momento atual.
+      const agora = new Date();
+      // Cria um novo objeto Date representando o horário de despertar, utilizando o ano, mês e dia do objeto 'agora'
+// e as horas e minutos fornecidos como argumentos.
+      const horaDespertar = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate(), horas, minutos, 0);
+// Calcula a diferença de tempo em milissegundos entre o horário de despertar (horaDespertar) e o momento atual (agora).
+      const diferenca = horaDespertar - agora;
+
+      // Verifica se a diferença de tempo é menor ou igual a zero, ou seja, se já é hora de despertar.
+      if (diferenca <= 0) { 
+// Se a diferença for menor ou igual a zero, exibe a mensagem "Hora de despertar!" no elemento com o ID "contador".
+        document.getElementById("contador").textContent = "Hora de despertar!";
+         // Chama a função 'tocarSom' para reproduzir o som do alarme.
+        tocarSom();
+         // Encerra a execução da função despertador, pois já é hora de despertar.
+        return;
+      }
+
+      // Calcula a quantidade de segundos restantes até o horário de despertar, arredondando para baixo.
+      const segundosAteDespertar = Math.floor(diferenca / 1000);
+      // Cria uma variável vazia 'contadorTexto' que será usada para armazenar o texto do contador.
+      let contadorTexto = "";
+
+      // Loop que percorre de 'segundosAteDespertar' até 0 (inclusive).
+      for (let i = segundosAteDespertar; i >= 0; i--) {
+         // Atualiza o texto do contador para exibir quantos segundos faltam para o despertar.
+        contadorTexto = `Faltam ${i} segundos para o despertar...`;
+        // Define um temporizador para atualizar o texto no elemento com o ID "contador"
+  // a cada segundo, conforme a contagem regressiva avança.
+        setTimeout(() => {
+          document.getElementById("contador").textContent = contadorTexto;
+        }, (segundosAteDespertar - i) * 1000);
+      }
+
+      // Define um temporizador para quando for a hora de despertar.
+      setTimeout(() => {
+        // Atualiza o texto no elemento com o ID "contador" para exibir "Hora de despertar!".
+        document.getElementById("contador").textContent = "Hora de despertar!";
+        // Chama a função 'tocarSom()' para reproduzir o som do alarme.
+        tocarSom();
+      }, segundosAteDespertar * 1000);
+    }
+
+    // Define a função 'tocarSom' para reproduzir o som do alarme.
+    function tocarSom() {
+       // Obtém o elemento de áudio do alarme usando o ID "alarme".
+      const alarme = document.getElementById("alarme");
+       // Inicia a reprodução do som do alarme.
+      alarme.play();
+    }
+  </script>
+</body>
+</html>
+
